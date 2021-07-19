@@ -4,6 +4,7 @@ const { checkUsernameFree, checkUsernameExists, checkPasswordLength } = require(
 const router = require('express').Router()
 const Users = require('../users/users-model')
 const bcrypt = require('bcryptjs')
+const e = require('express')
 
 
 /**
@@ -54,10 +55,9 @@ router.post('/register', checkUsernameFree, checkPasswordLength, async (req, res
     "message": "Invalid credentials"
   }
  */
-router.post('/login', async (req, res, next) => {
+router.post('/login', checkUsernameExists, async (req, res, next) => {
   const { username, password } = req.body
   const [user] = await Users.findBy(username)
-  console.log(user)
   if (user && bcrypt.compareSync(password, user.password)) {
     req.session.user = user
     res.json({
@@ -67,7 +67,7 @@ router.post('/login', async (req, res, next) => {
   } else {
     next({
       status: 401,
-      message: 'Invalid'
+      message: 'Invalid credentials'
     })
   }
 })
@@ -87,6 +87,25 @@ router.post('/login', async (req, res, next) => {
     "message": "no session"
   }
  */
+  router.get('/logout', (req, res) => {
+    if (req.session && req.session.user) {
+      req.session.destroy(err => {
+        if (err) {
+          res.json({
+            message: 'error logging out'
+          });
+        } else {
+          res.json({
+            message: 'logged out'
+          });
+        }
+      });
+    } else {
+      res.json({
+        message: 'no session'
+      });
+    }
+  });
 
  
 // Don't forget to add the router to the `exports` object so it can be required in other modules

@@ -8,7 +8,7 @@ const Users = require('../users/users-model')
   }
 */
 function restricted(req, res, next) {
-  if (require.session.user) {
+  if (req.session.user) {
     next()
   } else {
     next({
@@ -18,14 +18,6 @@ function restricted(req, res, next) {
   }
 }
 
-/*
-  If the username in req.body already exists in the database
-
-  status 422
-  {
-    "message": "Username taken"
-  }
-*/
 async function checkUsernameFree(req, res, next) {
   try {
     const isTaken = await Users.findBy(req.body.username)
@@ -50,8 +42,16 @@ async function checkUsernameFree(req, res, next) {
     "message": "Invalid credentials"
   }
 */
-function checkUsernameExists() {
-
+async function checkUsernameExists(req, res, next) {
+  const exists = await Users.findBy(req.body.username)
+  if (exists.length !== 0) {
+    next()
+  } else {
+    next({
+      status: 401,
+      message: 'invalid credentials'
+    })
+  }
 }
 
 /*
