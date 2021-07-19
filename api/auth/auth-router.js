@@ -28,7 +28,7 @@ const bcrypt = require('bcryptjs')
     "message": "Password must be longer than 3 chars"
   }
  */
-router.post('/register', async (req, res, next) => {
+router.post('/register', checkUsernameFree, async (req, res, next) => {
   const { username, password } = req.body
   const hash = bcrypt.hashSync(password, 8)
   const newUser = {
@@ -36,10 +36,7 @@ router.post('/register', async (req, res, next) => {
     password: hash
   }
   const dbUser = await Users.add(newUser)
-  res.status(201).json({
-    status: 200,
-    message: dbUser
-  })
+  res.status(201).json(dbUser)
 })
 
 /**

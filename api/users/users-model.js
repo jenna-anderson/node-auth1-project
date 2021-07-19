@@ -12,7 +12,11 @@ async function find() {
   resolves to an ARRAY with all users that match the filter condition
  */
 async function findBy(filter) {
-  const filteredUsers = await db('users').where('username', 'like', `%${filter}%`)
+  const filteredUsers = await db
+    .select('user_id', 'username')
+    .from('users')
+    .where('username', 'like', `%${filter}%`)
+  console.log(filteredUsers)
   return filteredUsers
 }
 
@@ -33,7 +37,6 @@ async function findById(user_id) {
 async function add(user) {
   const [id] = await db('users').insert(user)
   const newUser = await findById(id)
-  console.log(newUser)
   return newUser
 }
 
