@@ -5,7 +5,7 @@ const db = require('../../data/db-config')
  */
 async function find() {
   const users = await db('users')
-  console.log(users)
+  return users
 }
 
 /**

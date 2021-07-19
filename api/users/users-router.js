@@ -30,8 +30,9 @@ const router = require('express').Router()
 const Users = require('./users-model')
 const restricted = require('../auth/auth-middleware')
 
-router.get('/', (req, res, next) => {
-  console.log('users get wired')
+router.get('/', async (req, res, next) => {
+  const users = await Users.find()
+  res.status(200).json(users)
 })
 
 module.exports = router
