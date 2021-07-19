@@ -28,7 +28,7 @@ const bcrypt = require('bcryptjs')
     "message": "Password must be longer than 3 chars"
   }
  */
-router.post('/register', checkUsernameFree, async (req, res, next) => {
+router.post('/register', checkUsernameFree, checkPasswordLength, async (req, res, next) => {
   const { username, password } = req.body
   const hash = bcrypt.hashSync(password, 8)
   const newUser = {
@@ -54,7 +54,23 @@ router.post('/register', checkUsernameFree, async (req, res, next) => {
     "message": "Invalid credentials"
   }
  */
-
+router.post('/login', async (req, res, next) => {
+  const { username, password } = req.body
+  const [user] = await Users.findBy(username)
+  console.log(user)
+  if (user && bcrypt.compareSync(password, user.password)) {
+    req.session.user = user
+    res.json({
+      status: 200,
+      message: `Welcome ${username}!`
+    })
+  } else {
+    next({
+      status: 401,
+      message: 'Invalid'
+    })
+  }
+})
 
 /**
   3 [GET] /api/auth/logout

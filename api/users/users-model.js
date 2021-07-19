@@ -13,10 +13,9 @@ async function find() {
  */
 async function findBy(filter) {
   const filteredUsers = await db
-    .select('user_id', 'username')
+    .select('user_id', 'username', 'password')
     .from('users')
-    .where('username', 'like', `%${filter}%`)
-  console.log(filteredUsers)
+    .where('username', filter)
   return filteredUsers
 }
 
