@@ -31,8 +31,9 @@ async function findById(user_id) {
   resolves to the newly inserted user { user_id, username }
  */
 async function add(user) {
-  const [id] = await db.insert(user)
-  const newUser = await db.findById(id)
+  const [id] = await db('users').insert(user)
+  const newUser = await findById(id)
+  console.log(newUser)
   return newUser
 }
 
