@@ -26,3 +26,12 @@
 
 
 // Don't forget to add the router to the `exports` object so it can be required in other modules
+const router = require('express').Router()
+const Users = require('./users-model')
+const restricted = require('../auth/auth-middleware')
+
+router.get('/', (req, res, next) => {
+  console.log('users get wired')
+})
+
+module.exports = router
