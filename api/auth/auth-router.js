@@ -4,7 +4,6 @@ const { checkUsernameFree, checkUsernameExists, checkPasswordLength } = require(
 const router = require('express').Router()
 const Users = require('../users/users-model')
 const bcrypt = require('bcryptjs')
-const e = require('express')
 
 
 /**

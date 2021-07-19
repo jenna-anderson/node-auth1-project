@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const restricted = require('../auth/auth-middleware')
+const { restricted } = require('../auth/auth-middleware')
 const Users = require('./users-model')
 
 /**
@@ -24,7 +24,7 @@ const Users = require('./users-model')
     "message": "You shall not pass!"
   }
  */
-router.get('/', async (req, res, next) => {
+router.get('/', restricted, async (req, res, next) => {
   try {
     const users = await Users.find()
     res.status(200).json(users)
